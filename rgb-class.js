@@ -1,3 +1,10 @@
+/**********************************************
+*               rgb-class.ts                  *
+* defines the class for an RGB Party Effect   *
+* Copyright (c) 2022 Joe Bussard              *
+* Licensed under GNU GPL 3.0                  *
+* Include this file before using it           *
+**********************************************/
 var rgbPartyEffect = /** @class */ (function () {
     function rgbPartyEffect(elementId, speed, backgroundReset, start_color, end_color) {
         if (speed === void 0) { speed = 20; }
@@ -47,7 +54,3 @@ var rgbPartyEffect = /** @class */ (function () {
     };
     return rgbPartyEffect;
 }());
-testRGB: rgbPartyEffect;
-var testRGB = new rgbPartyEffect("h1ForTesting");
-testRGB.toggleActive();
-var test2RGB = new rgbPartyEffect("body", 5, "blue");
