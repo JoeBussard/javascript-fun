@@ -1,3 +1,10 @@
+/**********************************************
+*               rgb-class.ts                  *
+* defines the class for an RGB Party Effect   *
+* Copyright (c) 2022 Joe Bussard              *
+* Licensed under GNU GPL 3.0                  *
+* Include this file before using it           *
+**********************************************/
 
 class rgbPartyEffect {
     i: number; // 0|1|2 && which color (r,g,b) is getting brighter
@@ -56,9 +63,3 @@ toggleActive() {
     }
   }
 }
-
-testRGB: rgbPartyEffect;
-var testRGB = new rgbPartyEffect("h1ForTesting");
-testRGB.toggleActive();
-
-var test2RGB = new rgbPartyEffect("body", 5, "blue");
