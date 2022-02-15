@@ -26,3 +26,14 @@ fun addons in javascript or typescript
 `rgb-class.js` Defines the rgbPartyEffect class
 
 `rgb-usage.js` An example of how to use the rgbPartyEffect
+
+#### Examples
+
+Your HTML file might have an element like this: `<div id='sign'>Hello!</div>`
+
+Your Javascript file would have this:
+
+    sign_rgb = new rgbPartyEffect("sign");
+    sign_rgb.toggleActive();
+
+The `sign` div would cycle between red, green, and blue until the tab is closed.
