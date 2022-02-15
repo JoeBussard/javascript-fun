@@ -1,48 +1,47 @@
-
-class rgbPartyEffect {
-
-  constructor(elementID, start_color=0, end_color=2, speed=20) {
-    this.elementID = elementID;
-    this.start_color = start_color;
-    this.end_color = end_color;
-    this.speed = speed;
-    this.colorArray[start_color] = 255;
-  }
-
-  let increasing = 0;
-  let decreasing = 0;
-  let colorArray = [0, 0, 0]
-  let activeNow = 0;
-  let start_color = 0;
-  let end_color = 2;
-  let elementID;
-  let speed;
-   
-  function cycleRGB() {
-    if (colorArray[decreasing] * colorArray[increasing] < 0) {
-      decreasing = increasing;
-      if (increasing == end_color) {
-        increasing = start_color;
-      }
-      else increasing ++;
+var rgbPartyEffect = /** @class */ (function () {
+    function rgbPartyEffect(elementId, backgroundReset, isActive, start_color, end_color, speed) {
+        if (backgroundReset === void 0) { backgroundReset = 'black'; }
+        if (isActive === void 0) { isActive = 0; }
+        if (start_color === void 0) { start_color = 0; }
+        if (end_color === void 0) { end_color = 1; }
+        if (speed === void 0) { speed = 20; }
+        this.elementId = document.getElementById(elementId);
+        this.start_color = start_color;
+        this.end_color = end_color;
+        this.speed = speed;
+        this.colorArray = new Array(3);
+        this.colorArray[start_color] = 255;
+        this.activeNow = isActive;
+        this.backgroundReset = backgroundReset;
+        this.increasing = end_color; // increasing is the ID (0,1,2) of the color that is becoming dominant.
+        this.decreasing = start_color; // decreasing is the ID (0,1,2) of the color that was dominant and is fading out.
     }
-    colorArray[increasing] -= 1
-    colorArray[decreasing] += 1
-    elementID.style.backgroundColor = 'rgb(' + colorArray.join(',') + ')';
-  }
-  
-  function toggleActive() {
-    partyActive = 1 - partyActive
-    console.log(elementID, partyActive)
-    if (partyActive > 0) {
-      partyInterval = setInterval(cycleRGB(), speed)
-    }
-    else {
-      elementID.style.backgroundColor = 'black'
-      clearInterval(partyInterval)
-    }
-  }
-}
-    
-
-
+    rgbPartyEffect.prototype.cycleRGB = function () {
+        if (this.colorArray[this.decreasing] * this.colorArray[this.increasing] < 0) {
+            this.decreasing = this.increasing;
+            if (this.increasing == this.end_color) {
+                this.increasing = this.start_color;
+            }
+            else
+                this.increasing++;
+        }
+        this.colorArray[this.increasing] -= 1;
+        this.colorArray[this.decreasing] += 1;
+        this.elementId.style.backgroundColor = 'rgb(' + this.colorArray.join(',') + ')';
+    };
+    rgbPartyEffect.prototype.toggleActive = function () {
+        this.activeNow = 1 - this.activeNow;
+        console.log("RGBParty: ", this.elementId, ": ", this.activeNow);
+        if (this.activeNow > 0) {
+            this.intervalId = setInterval(this.cycleRGB, this.speed);
+        }
+        else {
+            this.elementId.style.backgroundColor = this.backgroundReset;
+            clearInterval(this.intervalId);
+        }
+    };
+    return rgbPartyEffect;
+}());
+testRGB: rgbPartyEffect;
+var testRGB = new rgbPartyEffect("h1ForTesting");
+testRGB.toggleActive();
