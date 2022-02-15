@@ -6,16 +6,17 @@
 * Include this file before using it           *
 **********************************************/
 var rgbPartyEffect = /** @class */ (function () {
-    function rgbPartyEffect(elementId, speed, backgroundReset, start_color, end_color) {
+    function rgbPartyEffect(elementId, speed, isBackground, backgroundReset, start_color, end_color) {
         if (speed === void 0) { speed = 20; }
-        if (backgroundReset === void 0) { backgroundReset = 'black'; }
+        if (isBackground === void 0) { isBackground = false; }
+        if (backgroundReset === void 0) { backgroundReset = 'white'; }
         if (start_color === void 0) { start_color = 0; }
         if (end_color === void 0) { end_color = 1; }
-        this.elementId = document.getElementById(elementId);
         if (this.elementId === null) {
             console.error("[RGBParty] Tried to make effect for undefined element", elementId);
             return;
         }
+        this.elementId = elementId;
         this.start_color = start_color;
         this.end_color = end_color;
         this.speed = speed;
@@ -23,6 +24,8 @@ var rgbPartyEffect = /** @class */ (function () {
         this.colorArray[start_color] = 255;
         this.activeNow = 0;
         this.backgroundReset = this.elementId.style.backgroundColor;
+        this.foregroundReset = this.elementId.style.color;
+        this.isBackground = isBackground;
         this.i = 0; // decreasing is the ID (0,1,2) of the color that was dominant and is fading out.
         this.j = 1; // increasing is the ID (0,1,2) of the color that is becoming dominant.
         console.log("[RGBParty] constructed effect for", this.elementId.id);
@@ -38,7 +41,12 @@ var rgbPartyEffect = /** @class */ (function () {
         }
         self.colorArray[self.i] -= 1;
         self.colorArray[self.j] += 1;
-        self.elementId.style.backgroundColor = 'rgb(' + self.colorArray.join(',') + ')';
+        if (self.isBackground) {
+            self.elementId.style.backgroundColor = 'rgb(' + self.colorArray.join(',') + ')';
+        }
+        else {
+            self.elementId.style.color = 'rgb(' + self.colorArray.join(',') + ')';
+        }
     };
     rgbPartyEffect.prototype.toggleActive = function (self) {
         var self = self;
@@ -49,6 +57,7 @@ var rgbPartyEffect = /** @class */ (function () {
         }
         else {
             self.elementId.style.backgroundColor = self.backgroundReset;
+            self.elementId.style.color = self.foregroundReset;
             clearInterval(self.intervalId);
         }
     };
