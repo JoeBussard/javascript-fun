@@ -15,6 +15,7 @@ Call toggleActive() and the element with the id you provided will begin to cycle
 
 
 Parameters:
+
     elementId
 The string for the element you want to have the effect on
     speed
