@@ -22,7 +22,7 @@ var rgbPartyEffect = /** @class */ (function () {
         this.colorArray = [0, 0, 0];
         this.colorArray[start_color] = 255;
         this.activeNow = 0;
-        this.backgroundReset = backgroundReset;
+        this.backgroundReset = this.elementId.style.backgroundColor;
         this.i = 0; // decreasing is the ID (0,1,2) of the color that was dominant and is fading out.
         this.j = 1; // increasing is the ID (0,1,2) of the color that is becoming dominant.
         console.log("[RGBParty] constructed effect for", this.elementId.id);
@@ -40,16 +40,34 @@ var rgbPartyEffect = /** @class */ (function () {
         self.colorArray[self.j] += 1;
         self.elementId.style.backgroundColor = 'rgb(' + self.colorArray.join(',') + ')';
     };
-    rgbPartyEffect.prototype.toggleActive = function () {
-        var self = this;
-        this.activeNow = 1 - this.activeNow;
-        console.log("[RGBParty] ", this.elementId.id, "is", this.activeNow ? "ON" : "OFF");
-        if (this.activeNow > 0) {
-            this.intervalId = setInterval(this.cycleRGB, this.speed, self);
+    rgbPartyEffect.prototype.toggleActive = function (self) {
+        var self = self;
+        self.activeNow = 1 - self.activeNow;
+        console.log("[RGBParty]", self.elementId.id, "is", self.activeNow ? "ON" : "OFF");
+        if (self.activeNow > 0) {
+            self.intervalId = setInterval(self.cycleRGB, self.speed, self);
         }
         else {
-            this.elementId.style.backgroundColor = this.backgroundReset;
-            clearInterval(this.intervalId);
+            self.elementId.style.backgroundColor = self.backgroundReset;
+            clearInterval(self.intervalId);
+        }
+    };
+    rgbPartyEffect.prototype.turnOn = function () {
+        var self = this;
+        if (this.activeNow == 1) {
+            console.warn("[RGBParty]", this.elementId.id, "is already on");
+        }
+        else {
+            this.toggleActive(self);
+        }
+    };
+    rgbPartyEffect.prototype.turnOff = function () {
+        var self = this;
+        if (this.activeNow == 0) {
+            console.warn("[RGBParty]", this.elementId.id, "is already off");
+        }
+        else {
+            this.toggleActive(self);
         }
     };
     return rgbPartyEffect;
