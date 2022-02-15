@@ -11,7 +11,7 @@ fun addons in javascript or typescript
 2. Pass a string for the id of a given DOM element into the class constructor.
 3. Call toggleActive() and the element with the id you provided will begin to cycle through Red, Green, and Blue background colors.
 
-Parameters:
+#### Parameters
 
 `elementId` The string for the element you want to have the effect on
 
@@ -19,14 +19,10 @@ Parameters:
 
 `backgroundReset` The color, currently one of the named colors in CSS, for the element when you turn off the effect using toggleActive().
 
-    rgb-class.ts
+#### Files
 
-Used to generate the javascript file
+`rgb-class.ts` Used to generate the javascript file
 
-    rgb-class.js
+`rgb-class.js` Defines the rgbPartyEffect class
 
-Defines the rgbPartyEffect class
-
-    rgb-usage.js
-
-An example of how to use the rgbPartyEffect
+`rgb-usage.js` An example of how to use the rgbPartyEffect
