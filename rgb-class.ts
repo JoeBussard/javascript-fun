@@ -21,12 +21,17 @@ class rgbPartyEffect {
   isBackground: boolean;
   styleObject: object;
 
-  constructor(elementId:HTMLElement, speed:number=20, isBackground:boolean=false, backgroundReset:string='white', start_color:number =0, end_color:number =1) {
+  constructor(elementId:HTMLElement|string, speed:number=20, isBackground:boolean=false, backgroundReset:string='white', start_color:number =0, end_color:number =1) {
     if (this.elementId === null) {
       console.error("[RGBParty] Tried to make effect for undefined element", elementId);
       return
     }
-    this.elementId = elementId;
+    if (typeof(elementId) == "string") {
+      this.elementId = document.getElementById(elementId);
+    }
+    else {
+      this.elementId = elementId;
+    }
     this.start_color = start_color;
     this.end_color = end_color;
     this.speed = speed;

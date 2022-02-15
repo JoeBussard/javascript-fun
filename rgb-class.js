@@ -16,7 +16,12 @@ var rgbPartyEffect = /** @class */ (function () {
             console.error("[RGBParty] Tried to make effect for undefined element", elementId);
             return;
         }
-        this.elementId = elementId;
+        if (typeof (elementId) == "string") {
+            this.elementId = document.getElementById(elementId);
+        }
+        else {
+            this.elementId = elementId;
+        }
         this.start_color = start_color;
         this.end_color = end_color;
         this.speed = speed;
