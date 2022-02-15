@@ -2,9 +2,9 @@
 
 //h1ForTesting
 
-console.log("creating object");
-h1_rgb = rgbPartyEffect("h1ForTesting");
-
-console.log("toggling active");
+h1_rgb = new rgbPartyEffect("h1ForUsage");
+h1_rgb.speed = 5;
 h1_rgb.toggleActive();
 
+another_rgb = new rgbPartyEffect("anotherOne", 1);
+another_rgb.toggleActive();
