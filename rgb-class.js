@@ -1,3 +1,4 @@
+"use strict";
 /**********************************************
 *               rgb-class.ts                  *
 * defines the class for an RGB Party Effect   *
@@ -5,19 +6,22 @@
 * Licensed under GNU GPL 3.0                  *
 * Include this file before using it           *
 **********************************************/
-var rgbPartyEffect = /** @class */ (function () {
-    function rgbPartyEffect(elementId, speed, isBackground, backgroundReset, start_color, end_color) {
-        if (speed === void 0) { speed = 20; }
-        if (isBackground === void 0) { isBackground = false; }
-        if (backgroundReset === void 0) { backgroundReset = 'white'; }
-        if (start_color === void 0) { start_color = 0; }
-        if (end_color === void 0) { end_color = 1; }
+class rgbPartyEffect {
+    constructor(elementId, speed = 20, isBackground = false, backgroundReset = 'white', start_color = 0, end_color = 1) {
         if (this.elementId === null) {
-            console.error("[RGBParty] Tried to make effect for undefined element", elementId);
+            console.error('[RGBParty] Tried to make effect for undefined element %o', elementId);
+            throw '[RGBParty] Invalid elementId passed';
             return;
         }
-        if (typeof (elementId) == "string") {
-            this.elementId = document.getElementById(elementId);
+        if (typeof (elementId) == 'string') {
+            if (document.getElementById(elementId)) {
+                this.elementId = document.getElementById(elementId);
+            }
+            else {
+                console.error('[RGBParty] Could not find HTMLElement with ID %s', elementId);
+                throw '[RGBParty] HTMLElement does not exist in this DOM.';
+                return;
+            }
         }
         else {
             this.elementId = elementId;
@@ -25,6 +29,8 @@ var rgbPartyEffect = /** @class */ (function () {
         this.start_color = start_color;
         this.end_color = end_color;
         this.speed = speed;
+        this.intervalRate = speed;
+        this.stepsPerFrame = 1;
         this.colorArray = [0, 0, 0];
         this.colorArray[start_color] = 255;
         this.activeNow = 0;
@@ -33,10 +39,11 @@ var rgbPartyEffect = /** @class */ (function () {
         this.isBackground = isBackground;
         this.i = 0; // decreasing is the ID (0,1,2) of the color that was dominant and is fading out.
         this.j = 1; // increasing is the ID (0,1,2) of the color that is becoming dominant.
-        console.log("[RGBParty] constructed effect for", this.elementId.id);
+        console.log('[RGBParty] constructed effect for %s', this.elementId.id);
     }
-    rgbPartyEffect.prototype.cycleRGB = function (self) {
-        if (self.colorArray[self.i] * self.colorArray[self.j] < 0) {
+    cycleRGB(self) {
+        console.log('[RGBParty] [%s] rgb(%s)', self.elementId, self.colorArray.join(','));
+        if (self.colorArray[self.i] * self.colorArray[self.j] < 1) {
             self.i = self.j;
             if (self.j == 2) {
                 self.j = 0;
@@ -44,45 +51,71 @@ var rgbPartyEffect = /** @class */ (function () {
             else
                 self.j++;
         }
-        self.colorArray[self.i] -= 1;
-        self.colorArray[self.j] += 1;
+        self.colorArray[self.i] -= self.stepsPerFrame;
+        self.colorArray[self.j] += self.stepsPerFrame;
+        // I prefer not to have values outside of (0,255) even if the browser can interpret them.
+        {
+            if (self.colorArray[self.i] < 0)
+                self.colorArray[self.i] = 0;
+            if (self.colorArray[self.j] < 0)
+                self.colorArray[self.j] = 0;
+            if (self.colorArray[self.i] > 255)
+                self.colorArray[self.i] = 255;
+            if (self.colorArray[self.j] > 255)
+                self.colorArray[self.j] = 255;
+        }
         if (self.isBackground) {
-            self.elementId.style.backgroundColor = 'rgb(' + self.colorArray.join(',') + ')';
+            self.elementId.style.backgroundColor = `rgb(${self.colorArray.join(',')})`;
         }
         else {
-            self.elementId.style.color = 'rgb(' + self.colorArray.join(',') + ')';
+            self.elementId.style.color = `rgb(${self.colorArray.join(',')})`;
         }
-    };
-    rgbPartyEffect.prototype.toggleActive = function (self) {
+    }
+    changeIntervalRate(intervalRate) {
+        var self = this;
+        this.intervalRate = intervalRate;
+        if (this.activeNow == 1) {
+            this.toggleActive(self);
+            this.toggleActive(self);
+        }
+    }
+    changeStepsPerFrame(stepsPerFrame) {
+        var self = this;
+        this.stepsPerFrame = stepsPerFrame;
+        if (this.activeNow = 1) {
+            this.toggleActive(self);
+            this.toggleActive(self);
+        }
+    }
+    toggleActive(self) {
         var self = self;
         self.activeNow = 1 - self.activeNow;
-        console.log("[RGBParty]", self.elementId.id, "is", self.activeNow ? "ON" : "OFF");
+        //console.log(`[RGBParty] ${self.elementId.id} is ${self.activeNow ? 'ON' : 'OFF'}`)
         if (self.activeNow > 0) {
-            self.intervalId = setInterval(self.cycleRGB, self.speed, self);
+            self.intervalId = setInterval(self.cycleRGB, self.intervalRate, self);
         }
         else {
             self.elementId.style.backgroundColor = self.backgroundReset;
             self.elementId.style.color = self.foregroundReset;
             clearInterval(self.intervalId);
         }
-    };
-    rgbPartyEffect.prototype.turnOn = function () {
+    }
+    turnOn() {
         var self = this;
         if (this.activeNow == 1) {
-            console.warn("[RGBParty]", this.elementId.id, "is already on");
+            console.warn('[RGBParty] %s is already on', this.elementId.id);
         }
         else {
             this.toggleActive(self);
         }
-    };
-    rgbPartyEffect.prototype.turnOff = function () {
+    }
+    turnOff() {
         var self = this;
         if (this.activeNow == 0) {
-            console.warn("[RGBParty]", this.elementId.id, "is already off");
+            console.warn('[RGBParty] %s is already off', this.elementId.id);
         }
         else {
             this.toggleActive(self);
         }
-    };
-    return rgbPartyEffect;
-}());
+    }
+}
